@@ -19,5 +19,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "JetpackComposeToDo"
-include(":app")
+rootProject.name = "JetpackComposeProjects"
+include(":ToDoJetpackCompose")
+include(":WeatherJetpackCompose")
+include(":NewsReaderJetpackCompose")
