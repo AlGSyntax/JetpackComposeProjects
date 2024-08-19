@@ -3,45 +3,37 @@ package com.algsyntax.todojetpackcompose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import com.algsyntax.todojetpackcompose.ui.screens.TaskListScreen
 import com.algsyntax.todojetpackcompose.ui.theme.ToDoJetpackComposeTheme
+import com.algsyntax.todojetpackcompose.viewmodel.TaskViewModel
 
+/**
+ * The main activity of the ToDoJetpackCompose app.
+ *
+ * This activity sets the content view using Jetpack Compose and applies the app's theme.
+ * It uses a Scaffold layout to manage the structure of the UI and passes padding values
+ * from the Scaffold to the TaskListScreen composable.
+ */
 class MainActivity : ComponentActivity() {
+    // ViewModel instance for managing the tasks
+    private val taskViewModel: TaskViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             ToDoJetpackComposeTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
+                Scaffold { paddingValues ->
+                    // Pass the padding values to the TaskListScreen composable
+                    TaskListScreen(
+                        viewModel = taskViewModel,
+                        modifier = Modifier.padding(paddingValues)
                     )
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ToDoJetpackComposeTheme {
-        Greeting("Android")
     }
 }
