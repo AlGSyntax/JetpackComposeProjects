@@ -47,12 +47,27 @@ class TaskViewModel : ViewModel() {
     }
 
     /**
-     * Marks the task with the given ID as complete and updates the StateFlow.
+     * Toggles the completion status of the task with the given ID and updates the StateFlow.
      *
-     * @param taskId The ID of the task to be marked as complete.
+     * This method finds the task by its ID, toggles its completion status (i.e., if it was
+     * completed, it will be marked as not completed, and vice versa), and then updates
+     * the repository and the StateFlow to reflect this change.
+     *
+     * @param taskId The ID of the task to be toggled.
      */
     fun completeTask(taskId: Int) {
+        // Toggle the completion status of the task in the repository
         repository.completeTask(taskId)
-        _tasks.value = repository.getTasks() // Update the StateFlow with the updated task list.
+
+        // Update the StateFlow with the latest list of tasks from the repository
+        // This will trigger a re-composition of the UI to reflect the changes
+        _tasks.value = _tasks.value.map { task ->
+            if (task.id == taskId) {
+                // Toggle the isCompleted state
+                task.copy(isCompleted = !task.isCompleted)
+            } else {
+                task
+            }
+        }
     }
 }
