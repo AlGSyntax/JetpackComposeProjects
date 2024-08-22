@@ -1,15 +1,9 @@
 package com.algsyntax.todojetpackcompose.ui.screens
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -31,6 +25,75 @@ fun TaskListScreen(viewModel: TaskViewModel, modifier: Modifier = Modifier) {
     // Observes the tasks from the ViewModel as a StateFlow and collects them as a State.
     val tasks by viewModel.tasks.collectAsState(initial = emptyList())
 
+    // States to manage the dialog visibility and the input fields for the new task
+    var showDialog by remember { mutableStateOf(false) }
+    var newTaskTitle by remember { mutableStateOf("") }
+    var newTaskDescription by remember { mutableStateOf("") }
+
+    // Show a dialog for adding a new task
+    // Checks if the dialog should be shown.
+    if (showDialog) {
+        // AlertDialog is a predefined dialog in Jetpack Compose used for simple dialogs.
+        AlertDialog(
+            // onDismissRequest is called when the user tries to dismiss the dialog,
+            // such as by pressing the back button or clicking outside the dialog.
+            // Here, we set showDialog to false to close the dialog.
+            onDismissRequest = { showDialog = false },
+
+            // title defines the title of the dialog.
+            title = { Text(text = "Add New Task") },
+
+            // text defines the content of the dialog, which in this case
+            // is a Column containing two OutlinedTextFields for task input.
+            text = {
+                Column {
+                    // OutlinedTextField is a text input field with an outlined border.
+                    // The value parameter holds the current text in the input field,
+                    // and onValueChange is a callback that updates the state when the text changes.
+                    OutlinedTextField(
+                        value = newTaskTitle,
+                        onValueChange = { newTaskTitle = it },
+                        label = { Text("Title") } // The label that appears above the text field.
+                    )
+                    OutlinedTextField(
+                        value = newTaskDescription,
+                        onValueChange = { newTaskDescription = it },
+                        label = { Text("Description") } // The label that appears above the text field.
+                    )
+                }
+            },
+
+            // confirmButton defines the button that confirms the action (e.g., adding the task).
+            confirmButton = {
+                // The Button component represents a clickable button.
+                Button(onClick = {
+                    // Checks if both the title and description are not empty before proceeding.
+                    if (newTaskTitle.isNotEmpty() && newTaskDescription.isNotEmpty()) {
+                        // Calls the addTask method in the ViewModel to add the new task.
+                        viewModel.addTask(newTaskTitle, newTaskDescription)
+
+                        // Closes the dialog by setting showDialog to false.
+                        showDialog = false
+
+                        // Resets the text fields to empty strings.
+                        newTaskTitle = ""
+                        newTaskDescription = ""
+                    }
+                }) {
+                    // The text displayed on the button.
+                    Text("Add")
+                }
+            },
+
+            // dismissButton defines the button that cancels the action and closes the dialog.
+            dismissButton = {
+                Button(onClick = { showDialog = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
+
     // LazyColumn is a vertically scrollable list that only composes and lays out visible items.
     LazyColumn(modifier = modifier) {
 
@@ -46,8 +109,8 @@ fun TaskListScreen(viewModel: TaskViewModel, modifier: Modifier = Modifier) {
                 // Displays the title of the task list.
                 Text(text = "My Task List", fontSize = 24.sp)
 
-                // Button for adding a new task (no action defined yet).
-                Button(onClick = { /*TODO: Handle adding a task */ }) {
+                // Button for adding a new task.
+                Button(onClick = { showDialog = true }) {
                     Text(text = "Add Task")
                 }
             }
