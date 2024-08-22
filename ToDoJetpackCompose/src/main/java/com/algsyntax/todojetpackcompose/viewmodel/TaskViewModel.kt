@@ -30,10 +30,19 @@ class TaskViewModel : ViewModel() {
     /**
      * Adds a new task to the repository and updates the StateFlow.
      *
-     * @param task The task to be added.
+     * @param title The title of the task to be added.
+     * @param description The description of the task to be added.
      */
-    fun addTask(task: Task) {
-        repository.addTask(task)
+    fun addTask(title: String, description: String) {
+        // Create a new Task with a generated ID.
+        val newTask = Task(
+            id = _tasks.value.size + 1,  // Simplified ID generation
+            title = title,
+            description = description,
+            isCompleted = false
+        )
+        // Add the new task to the repository and update the StateFlow.
+        repository.addTask(newTask)
         _tasks.value = repository.getTasks() // Update the StateFlow with the new task list.
     }
 
