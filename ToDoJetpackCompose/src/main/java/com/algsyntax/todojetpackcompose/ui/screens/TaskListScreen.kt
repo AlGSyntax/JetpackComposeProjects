@@ -94,6 +94,7 @@ fun TaskListScreen(viewModel: TaskViewModel, modifier: Modifier = Modifier) {
         )
     }
 
+    Column(modifier = modifier.padding(16.dp)) {
     // LazyColumn is a vertically scrollable list that only composes and lays out visible items.
     LazyColumn(modifier = modifier) {
 
@@ -129,4 +130,14 @@ fun TaskListScreen(viewModel: TaskViewModel, modifier: Modifier = Modifier) {
             )
         }
     }
-}
+
+        Text(
+            text = "Total tasks: ${tasks.size}",
+            fontSize = 16.sp,
+            modifier = Modifier.padding(top = 16.dp)
+        )
+    }
+
+    }
+
+
