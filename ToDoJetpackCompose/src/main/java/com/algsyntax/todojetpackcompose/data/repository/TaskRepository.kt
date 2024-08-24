@@ -1,37 +1,34 @@
 package com.algsyntax.todojetpackcompose.data.repository
 
 import com.algsyntax.jetpackcomposetodo.data.model.Task
+import com.algsyntax.todojetpackcompose.data.sqlite.ToDoDao
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Repository for managing tasks in the ToDo application.
  *
- * This class provides methods to retrieve, add, and complete tasks.
- * It is initialized with some sample tasks for testing purposes.
+ * This class provides methods to retrieve, add, and complete tasks
+ * using a Room database.
  */
-class TaskRepository {
-    // List to store the tasks
-    private val tasks = mutableListOf(
-        Task(id = 1, title = "Task 1", description = "Description for Task 1", isCompleted = false),
-        Task(id = 2, title = "Task 2", description = "Description for Task 2", isCompleted = true),
-        Task(id = 3, title = "Task 3", description = "Description for Task 3", isCompleted = false)
-    )
+class TaskRepository(private val toDoDao: ToDoDao) {
+
 
     /**
-     * Retrieves the list of all tasks.
+     * Retrieves the list of all tasks from the Room database.
      *
-     * @return A list of tasks.
+     * @return A Flow that emits a list of tasks.
      */
-    fun getTasks(): List<Task> {
-        return tasks
+    fun getTasks(): Flow<List<Task>> {
+        return toDoDao.getAll()
     }
 
     /**
-     * Adds a new task to the repository.
+     * Adds a new task to the Room database.
      *
      * @param task The task to be added.
      */
-    fun addTask(task: Task) {
-        tasks.add(task)
+    suspend fun addTask(task: Task) {
+        toDoDao.insertAll(listOf(task))
     }
 
     /**
@@ -39,9 +36,19 @@ class TaskRepository {
      *
      * @param taskId The ID of the task to mark as completed.
      */
-    fun completeTask(taskId: Int) {
-        tasks.find { it.id == taskId }?.let {
-            it.isCompleted = true
-        }
+    suspend fun completeTask(task: Task) {
+        toDoDao.update(task)
+    }
+
+    /**
+     * Deletes a specific task from the Room database.
+     *
+     * @param task The task to be deleted.
+     */
+    suspend fun deleteTask(task: Task) {
+        toDoDao.delete(task)
     }
 }
+
+
+
