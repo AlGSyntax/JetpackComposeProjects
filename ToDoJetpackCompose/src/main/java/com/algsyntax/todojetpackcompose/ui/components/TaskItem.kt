@@ -5,6 +5,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -22,18 +26,18 @@ import com.algsyntax.jetpackcomposetodo.data.model.Task
  *                      It provides the new checked state as a Boolean.
  */
 @Composable
-fun TaskItem(task: Task, onTaskChecked: (Boolean) -> Unit) {
-    // Row layout arranges the checkbox and text in a horizontal line
+fun TaskItem(task: Task, onTaskChecked: (Task) -> Unit) {
+    // Lokale Kopie des isCompleted-Status zur Vermeidung von UI-Fehlern
+    var isChecked by remember { mutableStateOf(task.isCompleted) }
+
     Row(modifier = Modifier.padding(8.dp)) {
-        // Checkbox displays the completion status of the task
         Checkbox(
-            checked = task.isCompleted, // Sets the checkbox state based on the task's completion status
-            onCheckedChange = { isChecked ->
-                // Trigger the callback with the new checked state when the checkbox is toggled
-                onTaskChecked(isChecked)
+            checked = isChecked,
+            onCheckedChange = { checked ->
+                isChecked = checked
+                onTaskChecked(task.copy(isCompleted = checked))
             }
         )
-        // Displays the title of the task next to the checkbox
         Text(text = task.title, modifier = Modifier.padding(start = 8.dp))
     }
 }
