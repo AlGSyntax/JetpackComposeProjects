@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.sp
 import com.algsyntax.todojetpackcompose.ui.components.TaskItem
 import com.algsyntax.todojetpackcompose.viewmodel.TaskViewModel
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 /**
@@ -75,11 +76,15 @@ fun TaskListScreen(
         )
     }
 
-    // Main content layout with padding applied.
-    Column(modifier = modifier.padding(16.dp)) {
+    // Box layout to manage the positioning of the task list and the bottom Row.
+    Box(modifier = modifier.fillMaxSize()) {
         // LazyColumn provides a vertically scrollable list of tasks.
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
-            // A single non-repeatable item at the top to display the title and add task button.
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 60.dp) // Padding to prevent overlap with the bottom Row
+        ) {
+            // The first item displays the title and the Add Task button.
             item {
                 Row(
                     modifier = Modifier
@@ -87,21 +92,17 @@ fun TaskListScreen(
                         .padding(16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    // Title text for the task list.
                     Text(text = "My Task List", fontSize = 24.sp)
-
-                    // Button to show the dialog for adding a new task.
                     Button(onClick = { showDialog = true }) {
                         Text(text = "Add Task")
                     }
                 }
             }
 
-            // Items to display each task in the list.
+            // Display each task in the list using TaskItem.
             items(tasks.size) { index ->
                 val task = tasks[index]
 
-                // Composable to display each task with its checkbox and delete button.
                 TaskItem(
                     task = task,
                     onTaskChecked = { updatedTask ->
@@ -116,11 +117,24 @@ fun TaskListScreen(
             }
         }
 
-        // Display the total number of tasks at the bottom of the screen.
-        Text(
-            text = "Total tasks: ${tasks.size}",
-            fontSize = 16.sp,
-            modifier = Modifier.padding(top = 16.dp)
-        )
+        // Row to display the total number of tasks and a button to clear completed tasks.
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter) // Aligns the Row at the bottom of the screen
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Total tasks: ${tasks.size}",
+                fontSize = 16.sp
+            )
+
+            // Button to clear all completed tasks.
+            Button(onClick = { viewModel.clearCompletedTasks() }) {
+                Text(text = "Clear Completed")
+            }
+        }
     }
 }
