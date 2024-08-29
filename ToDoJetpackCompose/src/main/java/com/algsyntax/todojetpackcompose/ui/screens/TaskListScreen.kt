@@ -45,40 +45,50 @@ fun TaskListScreen(
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
-            title = { Text(text = "Add New Task") },
+            title = { Text(text = "Add New Task", color = MaterialTheme.colorScheme.onBackground) },
             text = {
                 Column {
                     OutlinedTextField(
                         value = newTaskTitle,
                         onValueChange = { newTaskTitle = it },
-                        label = { Text("Title") }
+                        label = { Text("Title", color = MaterialTheme.colorScheme.primary) }
                     )
                     OutlinedTextField(
                         value = newTaskDescription,
                         onValueChange = { newTaskDescription = it },
-                        label = { Text("Description") }
+                        label = { Text("Description", color = MaterialTheme.colorScheme.primary) }
                     )
                 }
             },
             confirmButton = {
-                Button(onClick = {
-                    if (newTaskTitle.isNotEmpty() && newTaskDescription.isNotEmpty()) {
-                        // Add the new task through the ViewModel.
-                        viewModel.addTask(newTaskTitle, newTaskDescription)
-                        showDialog = false
-                        newTaskTitle = ""
-                        newTaskDescription = ""
+                Button(
+                    onClick = {
+                        if (newTaskTitle.isNotEmpty() && newTaskDescription.isNotEmpty()) {
+                            // Add the new task through the ViewModel.
+                            viewModel.addTask(newTaskTitle, newTaskDescription)
+                            showDialog = false
+                            newTaskTitle = ""
+                            newTaskDescription = ""
 
-                        // Set the snackbar message to show a success message
-                        snackbarMessage = "Task added successfully"
-                    }
-                }) {
-                    Text("Add")
+                            // Set the snackbar message to show a success message
+                            snackbarMessage = "Task added successfully"
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary
+                    )
+                ) {
+                    Text("Add", color = MaterialTheme.colorScheme.onPrimary)
                 }
             },
             dismissButton = {
-                Button(onClick = { showDialog = false }) {
-                    Text("Cancel")
+                Button(
+                    onClick = { showDialog = false },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.secondary
+                    )
+                ) {
+                    Text("Cancel", color = MaterialTheme.colorScheme.onSecondary)
                 }
             }
         )
@@ -112,9 +122,13 @@ fun TaskListScreen(
                             .padding(16.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = "My Task List", fontSize = 24.sp)
+                        Text(
+                            text = "My Task List",
+                            fontSize = 24.sp,
+                            color = MaterialTheme.colorScheme.primary
+                        )
                         Button(onClick = { showDialog = true }) {
-                            Text(text = "Add Task")
+                            Text(text = "Add Task", color = MaterialTheme.colorScheme.onPrimary)
                         }
                     }
                 }
@@ -151,12 +165,13 @@ fun TaskListScreen(
             ) {
                 Text(
                     text = "Total tasks: ${tasks.size}",
-                    fontSize = 16.sp
+                    fontSize = 16.sp,
+                    color = MaterialTheme.colorScheme.primary
                 )
 
                 // Button to clear all completed tasks.
                 Button(onClick = { viewModel.clearCompletedTasks() }) {
-                    Text(text = "Clear Completed")
+                    Text(text = "Clear Completed", color = MaterialTheme.colorScheme.onPrimary)
                 }
             }
         }
