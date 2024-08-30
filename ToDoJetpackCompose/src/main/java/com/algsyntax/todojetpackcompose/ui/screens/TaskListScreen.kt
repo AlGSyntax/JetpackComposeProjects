@@ -41,22 +41,40 @@ fun TaskListScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     var snackbarMessage by remember { mutableStateOf<String?>(null) }
 
-    // Display a dialog for adding a new task.
+// Display a dialog for adding a new task if showDialog is true.
     if (showDialog) {
+        // AlertDialog is a predefined composable that displays a dialog window.
         AlertDialog(
+            // This callback is triggered when the user tries to dismiss the dialog (e.g., tapping outside the dialog or pressing the back button).
+            // Here, we set `showDialog` to false to close the dialog.
             onDismissRequest = { showDialog = false },
+
+            // The title of the dialog, which appears at the top of the dialog window.
+            // We use `MaterialTheme.colorScheme.onBackground` to ensure the text color contrasts with the background.
             title = { Text(text = "Add New Task", color = MaterialTheme.colorScheme.onBackground) },
+
+            // The content of the dialog, which contains the input fields for entering the task's title and description.
+            // These input fields are wrapped in a Column to stack them vertically.
             text = {
                 Column {
+                    // OutlinedTextField is a composable that provides a text input field with an outlined border.
+                    // `value` holds the current text entered by the user, and `onValueChange` updates the state with the new input.
                     OutlinedTextField(
-                        value = newTaskTitle,
-                        onValueChange = { newTaskTitle = it },
-                        label = { Text("Title", color = MaterialTheme.colorScheme.primary) }
+                        value = newTaskTitle,  // The current value of the task title input field.
+                        onValueChange = { newTaskTitle = it },  // Updates the task title as the user types.
+                        label = {
+                            // The label that appears above the text field when it's active (focused) or contains text.
+                            Text("Title", color = MaterialTheme.colorScheme.primary)
+                        }
                     )
+                    // Another OutlinedTextField for the task description, similar to the title input field.
                     OutlinedTextField(
-                        value = newTaskDescription,
-                        onValueChange = { newTaskDescription = it },
-                        label = { Text("Description", color = MaterialTheme.colorScheme.primary) }
+                        value = newTaskDescription,  // The current value of the task description input field.
+                        onValueChange = { newTaskDescription = it },  // Updates the task description as the user types.
+                        label = {
+                            // The label for the description input field.
+                            Text("Description", color = MaterialTheme.colorScheme.primary)
+                        }
                     )
                 }
             },
