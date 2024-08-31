@@ -1,6 +1,7 @@
 package com.algsyntax.todojetpackcompose.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.algsyntax.jetpackcomposetodo.data.model.Task
@@ -77,7 +78,15 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
      */
     fun clearCompletedTasks() {
         viewModelScope.launch {
-            _allTasks.value.filter { it.isCompleted }.forEach { repository.deleteTask(it) }
+            val completedTasks = _allTasks.value.filter { it.isCompleted }
+            if (completedTasks.isEmpty()) {
+                Log.d("TaskViewModel", "No completed tasks to clear.")
+            } else {
+                completedTasks.forEach {
+                    Log.d("TaskViewModel", "Deleting task: ${it.title}")
+                    repository.deleteTask(it)
+                }
+            }
             loadTasks()  // Reload tasks after clearing completed ones.
         }
     }
@@ -113,9 +122,10 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
      *
      * @param task The task to be toggled.
      */
-    fun completeTask(task: Task) {
-        val updatedTask = task.copy(isCompleted = !task.isCompleted)
+    fun completeTask(task: Task, iscompleted: Boolean) {
+        val updatedTask = task.copy(isCompleted = iscompleted)
         viewModelScope.launch {
+            Log.d("TaskViewModel", "Updating task: ${updatedTask.title}, isCompleted: ${updatedTask.isCompleted}")
             repository.completeTask(updatedTask)
             loadTasks()  // Reload tasks after updating a task.
         }

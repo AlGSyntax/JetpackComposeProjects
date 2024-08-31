@@ -1,5 +1,6 @@
 package com.algsyntax.todojetpackcompose.data.repository
 
+import android.util.Log
 import com.algsyntax.jetpackcomposetodo.data.model.Task
 import com.algsyntax.todojetpackcompose.data.sqlite.ToDoDao
 import kotlinx.coroutines.flow.Flow
@@ -46,6 +47,7 @@ class TaskRepository(private val toDoDao: ToDoDao) {
      * @param task The task to be deleted.
      */
     suspend fun deleteTask(task: Task) {
+        Log.d("TaskRepository", "Deleting task from DB: ${task.title}")
         toDoDao.delete(task)
     }
 }

@@ -159,9 +159,9 @@ fun TaskListScreen(
                         task = task,
                         onTaskChecked = { updatedTask ->
                             // Toggles the completion status of the task.
-                            viewModel.completeTask(updatedTask)
+                            viewModel.completeTask(updatedTask, iscompleted = !updatedTask.isCompleted)
                         },
-                        onDeleteTask = { task ->
+                        onDeleteTask = { _ ->
                             // Deletes the selected task.
                             viewModel.deleteTask(task)
 
