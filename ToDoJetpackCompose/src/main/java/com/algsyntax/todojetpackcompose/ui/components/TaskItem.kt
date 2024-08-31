@@ -1,10 +1,16 @@
 package com.algsyntax.todojetpackcompose.ui.components
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -15,16 +21,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.algsyntax.jetpackcomposetodo.data.model.Task
 
+
+
 /**
- * A composable function that displays a task item with a checkbox and delete button.
+ * A composable function that displays an animated task item with a checkbox and delete button.
  *
  * This function takes a Task object and displays its title along with a checkbox and a delete button.
  * The checkbox reflects the completion status of the task and triggers a callback
  * when its state changes. The delete button triggers a callback when clicked to delete the task.
+ * The task item can be expanded to show more details when clicked.
  *
  * @param task The task to display.
  * @param onTaskChecked Callback function that is triggered when the checkbox is checked or unchecked.
@@ -34,29 +44,55 @@ import com.algsyntax.jetpackcomposetodo.data.model.Task
  */
 @Composable
 fun TaskItem(task: Task, onTaskChecked: (Task) -> Unit, onDeleteTask: (Task) -> Unit) {
+    // Local state to track if the task item is expanded
+    var isExpanded by remember { mutableStateOf(false) }
+
+    // Screen dimensions
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+
+    // Card height and width animations based on the expanded state
+    val cardHeight by animateDpAsState(
+        targetValue = if (isExpanded) screenHeight / 2 else 100.dp,
+        animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing)
+    )
+
+    val cardWidth by animateDpAsState(
+        targetValue = if (isExpanded) screenWidth - 32.dp else screenWidth - 64.dp,
+        animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing)
+    )
+
     // Local copy of the isCompleted status to avoid UI issues with direct state changes.
     var isChecked by remember { mutableStateOf(task.isCompleted) }
 
-    // Row layout arranges the checkbox, text, and delete button in a horizontal line.
-    Row(modifier = Modifier.padding(8.dp)) {
-        // Checkbox that reflects the task's completion status.
-        Checkbox(
-            checked = isChecked,
-            onCheckedChange = { checked ->
-                isChecked = checked
-                // Trigger the callback with the updated task when the checkbox state changes.
-                onTaskChecked(task.copy(isCompleted = checked))
+    // Card layout with animations for width and height
+    Card(
+        modifier = Modifier
+            .padding(8.dp)
+            .size(width = cardWidth, height = cardHeight)
+            .clickable { isExpanded = !isExpanded } // Toggle expanded state on click
+    ) {
+        // Row layout arranges the checkbox, text, and delete button in a horizontal line.
+        Row(modifier = Modifier.padding(8.dp)) {
+            // Checkbox that reflects the task's completion status.
+            Checkbox(
+                checked = isChecked,
+                onCheckedChange = { checked ->
+                    isChecked = checked
+                    // Trigger the callback with the updated task when the checkbox state changes.
+                    onTaskChecked(task.copy(isCompleted = checked))
+                }
+            )
+            // Displays the task's title next to the checkbox.
+            Text(text = task.title, modifier = Modifier.padding(start = 8.dp))
+
+            // Spacer to push the delete button to the right end of the Row.
+            Spacer(modifier = Modifier.weight(1f))
+
+            // Delete button to remove the task.
+            IconButton(onClick = { onDeleteTask(task) }) {
+                Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete Task")
             }
-        )
-        // Displays the task's title next to the checkbox.
-        Text(text = task.title, modifier = Modifier.padding(start = 8.dp))
-
-        // Spacer to push the delete button to the right end of the Row.
-        Spacer(modifier = Modifier.weight(1f))
-
-        // Delete button to remove the task.
-        IconButton(onClick = { onDeleteTask(task) }) {
-            Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete Task")
         }
     }
 }
