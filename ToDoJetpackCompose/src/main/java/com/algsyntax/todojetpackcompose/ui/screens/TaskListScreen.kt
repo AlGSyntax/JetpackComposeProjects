@@ -4,14 +4,16 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.algsyntax.jetpackcomposetodo.data.model.Task
+import com.algsyntax.todojetpackcompose.ui.components.AddTaskDialog
 import com.algsyntax.todojetpackcompose.ui.components.TaskItem
 import com.algsyntax.todojetpackcompose.viewmodel.TaskViewModel
-import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 /**
  * A composable function that displays a list of tasks in a scrollable column.
@@ -27,91 +29,34 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 @Composable
 fun TaskListScreen(
     modifier: Modifier = Modifier,
-    viewModel: TaskViewModel = viewModel()
+    viewModel: TaskViewModel = viewModel(),
+            exampletasks: List<Task> = emptyList()
 ) {
     // Observes the tasks from the ViewModel as a Flow and collects them as a State.
     val tasks by viewModel.allTasks.collectAsState(initial = emptyList())
 
     // States to manage the dialog visibility and the input fields for the new task.
     var showDialog by remember { mutableStateOf(false) }
-    var newTaskTitle by remember { mutableStateOf("") }
-    var newTaskDescription by remember { mutableStateOf("") }
+
 
     // Snackbar host state to show feedback messages.
     val snackbarHostState = remember { SnackbarHostState() }
     var snackbarMessage by remember { mutableStateOf<String?>(null) }
 
-// Display a dialog for adding a new task if showDialog is true.
-    if (showDialog) {
-        // AlertDialog is a predefined composable that displays a dialog window.
-        AlertDialog(
-            // This callback is triggered when the user tries to dismiss the dialog (e.g., tapping outside the dialog or pressing the back button).
-            // Here, we set `showDialog` to false to close the dialog.
-            onDismissRequest = { showDialog = false },
+    // Call the AddTaskDialog composable to show a dialog for adding a new task.
+// The dialog is displayed based on the 'showDialog' state.
+    AddTaskDialog(
+        showDialog = showDialog, // Passes the current state of whether the dialog should be visible or not.
+        onDismiss = { showDialog = false }, // Callback to hide the dialog when it is dismissed.
 
-            // The title of the dialog, which appears at the top of the dialog window.
-            // We use `MaterialTheme.colorScheme.onBackground` to ensure the text color contrasts with the background.
-            title = { Text(text = "Add New Task", color = MaterialTheme.colorScheme.onBackground) },
-
-            // The content of the dialog, which contains the input fields for entering the task's title and description.
-            // These input fields are wrapped in a Column to stack them vertically.
-            text = {
-                Column {
-                    // OutlinedTextField is a composable that provides a text input field with an outlined border.
-                    // `value` holds the current text entered by the user, and `onValueChange` updates the state with the new input.
-                    OutlinedTextField(
-                        value = newTaskTitle,  // The current value of the task title input field.
-                        onValueChange = { newTaskTitle = it },  // Updates the task title as the user types.
-                        label = {
-                            // The label that appears above the text field when it's active (focused) or contains text.
-                            Text("Title", color = MaterialTheme.colorScheme.primary)
-                        }
-                    )
-                    // Another OutlinedTextField for the task description, similar to the title input field.
-                    OutlinedTextField(
-                        value = newTaskDescription,  // The current value of the task description input field.
-                        onValueChange = { newTaskDescription = it },  // Updates the task description as the user types.
-                        label = {
-                            // The label for the description input field.
-                            Text("Description", color = MaterialTheme.colorScheme.primary)
-                        }
-                    )
-                }
-            },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        if (newTaskTitle.isNotEmpty() && newTaskDescription.isNotEmpty()) {
-                            // Add the new task through the ViewModel.
-                            viewModel.addTask(newTaskTitle, newTaskDescription)
-                            showDialog = false
-                            newTaskTitle = ""
-                            newTaskDescription = ""
-
-                            // Set the snackbar message to show a success message
-                            snackbarMessage = "Task added successfully"
-                        }
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
-                    )
-                ) {
-                    Text("Add", color = MaterialTheme.colorScheme.onPrimary)
-                }
-            },
-            dismissButton = {
-                Button(
-                    onClick = { showDialog = false },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.secondary
-                    )
-                ) {
-                    Text("Cancel", color = MaterialTheme.colorScheme.onSecondary)
-                }
-            }
-        )
-    }
-
+        // Callback invoked when the user confirms adding a new task.
+        // The title and description entered by the user are passed to this lambda.
+        onAddTask = { title, description ->
+            viewModel.addTask(title, description) // Adds the new task to the ViewModel.
+            showDialog = false // Hides the dialog after adding the task.
+            snackbarMessage = "Task added successfully" // Sets the message for the snackbar to notify the user of the successful addition.
+        }
+    )
     // Show the snackbar whenever the snackbarMessage changes
     snackbarMessage?.let { message ->
         LaunchedEffect(snackbarHostState) {
@@ -194,4 +139,20 @@ fun TaskListScreen(
             }
         }
     }
+}
+
+
+/**
+ * A preview composable that shows the TaskListScreen with some sample tasks.
+ */
+@Preview(showBackground = true)
+@Composable
+fun TaskListScreenPreview() {
+    val sampleTasks = listOf(
+        Task(id = 1, title = "Sample Task 1", description = "Description 1", isCompleted = false),
+        Task(id = 2, title = "Sample Task 2", description = "Description 2", isCompleted = true),
+        Task(id = 3, title = "Sample Task 3", description = "Description 3", isCompleted = false)
+    )
+
+    TaskListScreen(exampletasks = sampleTasks)
 }
