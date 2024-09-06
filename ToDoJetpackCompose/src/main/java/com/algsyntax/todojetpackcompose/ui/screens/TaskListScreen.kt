@@ -33,7 +33,8 @@ fun TaskListScreen(
             exampletasks: List<Task> = emptyList()
 ) {
     // Observes the tasks from the ViewModel as a Flow and collects them as a State.
-    val tasks by viewModel.allTasks.collectAsState(initial = emptyList())
+    // Use the exampletasks if provided, otherwise use the tasks from the ViewModel.
+    val tasks = exampletasks.ifEmpty { viewModel.allTasks.collectAsState(initial = emptyList()).value }
 
     // States to manage the dialog visibility and the input fields for the new task.
     var showDialog by remember { mutableStateOf(false) }
