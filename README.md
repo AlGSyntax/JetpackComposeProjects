@@ -1,3 +1,16 @@
+# Mono-Repo for To-Do App, Weather App, and Daily News App
+
+## 🚧 Work in Progress 🚧
+
+Welcome to the **Mono-Repo** for my three ongoing projects:
+- **To-Do App**: A simple task management app built using Kotlin and Jetpack Compose.
+- **Weather App**: A basic structure for a weather forecasting app.
+- **Daily News App**: A skeleton for a news aggregation app.
+
+### ❗️ Disclaimer: Primordial README
+
+This README is still in its **primitive** form and serves as a **basic placeholder** for now. I plan to expand and improve it as the projects evolve. For now, it will briefly describe the three ongoing apps and the repo structure. **Think of this as a work-in-progress guide** – more detailed documentation will be added soon.
+
 ### To-Do App (WIP)
 The To-Do app is built using **Kotlin** and **Jetpack Compose**. It allows users to manage tasks with basic CRUD functionality.
 
