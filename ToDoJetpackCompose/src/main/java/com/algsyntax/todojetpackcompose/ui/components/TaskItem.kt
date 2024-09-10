@@ -49,7 +49,12 @@ fun TaskItem(task: Task, onTaskChecked: (Task) -> Unit, onDeleteTask: (Task) -> 
     // Local state to track if the task item is expanded
     var isExpanded by remember { mutableStateOf(false) }
 
-    // Screen dimensions
+    /**
+     * LocalConfiguration provides access to configuration data such as the screen size,
+     * orientation, font scale, etc., for the device the app is running on.
+     * Here, we use it to dynamically get the screen height and width in dp (density-independent pixels).
+     * This allows the TaskItem to adjust its size based on the device's screen dimensions.
+     */
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
 
