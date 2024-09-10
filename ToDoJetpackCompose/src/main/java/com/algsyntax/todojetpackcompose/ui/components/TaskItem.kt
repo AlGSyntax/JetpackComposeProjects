@@ -4,8 +4,10 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -74,26 +76,35 @@ fun TaskItem(task: Task, onTaskChecked: (Task) -> Unit, onDeleteTask: (Task) -> 
             .size(width = cardWidth, height = cardHeight)
             .clickable { isExpanded = !isExpanded } // Toggle expanded state on click
     ) {
-        // Row layout arranges the checkbox, text, and delete button in a horizontal line.
-        Row(modifier = Modifier.padding(8.dp)) {
-            // Checkbox that reflects the task's completion status.
-            Checkbox(
-                checked = isChecked,
-                onCheckedChange = { checked ->
-                    isChecked = checked
-                    // Trigger the callback with the updated task when the checkbox state changes.
-                    onTaskChecked(task.copy(isCompleted = checked))
+        // Column to display task title and description (if expanded)
+        Column(modifier = Modifier.padding(8.dp)) {
+            // Row layout arranges the checkbox, text, and delete button in a horizontal line.
+            Row(modifier = Modifier.padding(8.dp)) {
+                // Checkbox that reflects the task's completion status.
+                Checkbox(
+                    checked = isChecked,
+                    onCheckedChange = { checked ->
+                        isChecked = checked
+                        // Trigger the callback with the updated task when the checkbox state changes.
+                        onTaskChecked(task.copy(isCompleted = checked))
+                    }
+                )
+                // Displays the task's title next to the checkbox.
+                Text(text = task.title, modifier = Modifier.padding(start = 8.dp))
+
+                // Spacer to push the delete button to the right end of the Row.
+                Spacer(modifier = Modifier.weight(1f))
+
+                // Delete button to remove the task.
+                IconButton(onClick = { onDeleteTask(task) }) {
+                    Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete Task")
                 }
-            )
-            // Displays the task's title next to the checkbox.
-            Text(text = task.title, modifier = Modifier.padding(start = 8.dp))
+            }
 
-            // Spacer to push the delete button to the right end of the Row.
-            Spacer(modifier = Modifier.weight(1f))
-
-            // Delete button to remove the task.
-            IconButton(onClick = { onDeleteTask(task) }) {
-                Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete Task")
+            // Show the task description if the item is expanded
+            if (isExpanded) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(text = task.description, modifier = Modifier.padding(start = 8.dp))
             }
         }
     }
@@ -110,7 +121,7 @@ fun TaskItem(task: Task, onTaskChecked: (Task) -> Unit, onDeleteTask: (Task) -> 
 @Composable
 fun TaskItemPreview() {
     // Creates a sample task for previewing the TaskItem composable.
-    val sampleTask = Task(id = 1, title = "Sample Task", description = "This is a sample task", isCompleted = false)
+    val sampleTask = Task(id = 1, title = "Sample Task", description = "This is a sample task description", isCompleted = false)
 
     // Renders the TaskItem with the sample task.
     // The onTaskChecked and onDeleteTask lambdas are provided with empty implementations for the preview.
