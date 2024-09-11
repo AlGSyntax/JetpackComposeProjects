@@ -3,66 +3,49 @@ package com.algsyntax.todojetpackcompose.ui.theme
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 
 
+// Define the dark color scheme (black background, white text)
 private val DarkColorScheme = darkColorScheme(
-    primary = DarkPrimary,
-    secondary = DarkSecondary,
-    tertiary = DarkTertiary,
-    background = DarkBackgroundColor,
-    surface = DarkBackgroundColor,
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
-    onTertiary = Color.Black,
-    onBackground = Color.White,
-    onSurface = Color.White
-)
-
-private val LightColorScheme = lightColorScheme(
-    primary = LightPrimary,
-    secondary = LightSecondary,
-    tertiary = LightTertiary,
-    background = LightBackgroundColor,
-    surface = LightBackgroundColor,
+    primary = Color.White,  // White text
+    secondary = Color.Gray,
+    tertiary = Color.DarkGray,
+    background = Color.Black,  // Black background
+    surface = Color.Black,  // Also black for surfaces
     onPrimary = Color.Black,
     onSecondary = Color.White,
     onTertiary = Color.White,
-    onBackground = Color.Black,
-    onSurface = Color.Black
+    onBackground = Color.White,  // White text on black background
+    onSurface = Color.White  // White text on black surfaces
 )
 
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
+// Define the light color scheme (white background, black text)
+private val LightColorScheme = lightColorScheme(
+    primary = Color.Black,  // Black text
+    secondary = Color.Gray,
+    tertiary = Color.DarkGray,
+    background = Color.White,  // White background
+    surface = Color.White,
     onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
-
+    onSecondary = Color.Black,
+    onTertiary = Color.Black,
+    onBackground = Color.Black,  // Black text on white background
+    onSurface = Color.Black  // Black text on white surfaces
+)
 
 @Composable
 fun ToDoJetpackComposeTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,  // Disable dynamic color for manual control
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+    val colorScheme = if (darkTheme) {
+        DarkColorScheme  // Use the dark theme with black background
+    } else {
+        LightColorScheme  // Use the light theme with white background
     }
 
     MaterialTheme(

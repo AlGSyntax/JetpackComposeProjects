@@ -62,13 +62,13 @@ fun TaskItem(task: Task, onTaskChecked: (Task) -> Unit, onDeleteTask: (Task) -> 
     val cardHeight by animateDpAsState(
         targetValue = if (isExpanded) screenHeight / 2 else 100.dp,
         animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing),
-        label = "CardHeightAnimation"  // Label für die Höhe der Karte
+        label = "CardHeightAnimation"  // Label for the height of the card
     )
 
     val cardWidth by animateDpAsState(
         targetValue = if (isExpanded) screenWidth - 32.dp else screenWidth - 64.dp,
         animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing),
-        label = "CardWidthAnimation"  // Label für die Breite der Karte
+        label = "CardWidthAnimation"  // Label for the width of the card
     )
 
     // Local copy of the isCompleted status to avoid UI issues with direct state changes.
