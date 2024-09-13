@@ -3,6 +3,8 @@ package com.algsyntax.todojetpackcompose.ui.components
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,7 +25,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.algsyntax.jetpackcomposetodo.data.model.Task
@@ -80,11 +85,19 @@ fun TaskItem(task: Task, onTaskChecked: (Task) -> Unit, onDeleteTask: (Task) -> 
             .padding(8.dp)
             .size(width = cardWidth, height = cardHeight)
             .clickable { isExpanded = !isExpanded } // Toggle expanded state on click
+            .background(Color.Black) // Terminal-like black background
+            .border(1.dp, Color.Green) // Green border for terminal-like styling
     ) {
         // Column to display task title and description (if expanded)
-        Column(modifier = Modifier.padding(8.dp)) {
+        Column(modifier = Modifier
+            .background(Color.Black) // Ensure the content inside the card is also black
+            .padding(8.dp)) {
             // Row layout arranges the checkbox, text, and delete button in a horizontal line.
-            Row(modifier = Modifier.padding(8.dp)) {
+            Row(modifier = Modifier
+
+                .padding(8.dp)
+                .background(Color.Black) // Ensure the row background is black
+            ) {
                 // Checkbox that reflects the task's completion status.
                 Checkbox(
                     checked = isChecked,
@@ -92,24 +105,26 @@ fun TaskItem(task: Task, onTaskChecked: (Task) -> Unit, onDeleteTask: (Task) -> 
                         isChecked = checked
                         // Trigger the callback with the updated task when the checkbox state changes.
                         onTaskChecked(task.copy(isCompleted = checked))
-                    }
+                    },
+                    modifier = Modifier.background(Color.Black)
                 )
                 // Displays the task's title next to the checkbox.
-                Text(text = task.title, modifier = Modifier.padding(start = 8.dp))
+                Text(text = task.title, modifier = Modifier.padding(start = 8.dp), style = TextStyle(color = Color.Green, fontFamily = FontFamily.Monospace))
 
                 // Spacer to push the delete button to the right end of the Row.
                 Spacer(modifier = Modifier.weight(1f))
 
                 // Delete button to remove the task.
                 IconButton(onClick = { onDeleteTask(task) }) {
-                    Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete Task")
+                    Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete Task",
+                        tint = Color.Green) // Green icon for terminal feel)
                 }
             }
 
             // Show the task description if the item is expanded
             if (isExpanded) {
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(text = task.description, modifier = Modifier.padding(start = 8.dp))
+                Text(text = task.description, modifier = Modifier.padding(start = 8.dp), style = TextStyle(color = Color.White, fontFamily = FontFamily.Monospace))
             }
         }
     }

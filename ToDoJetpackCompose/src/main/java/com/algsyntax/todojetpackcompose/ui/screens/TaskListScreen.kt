@@ -89,6 +89,7 @@ fun TaskListScreen(
                 modifier = Modifier
                     .fillMaxWidth() // The list fills the entire width of the screen.
                     .padding(bottom = 60.dp) // Padding at the bottom to avoid overlapping the row.
+                    .fillMaxSize() // Ensure the LazyColumn takes the full screen width and height
             ) {
                 // First item in the list: A title and a button to add a task.
                 item {
