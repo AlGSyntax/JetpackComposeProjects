@@ -20,6 +20,10 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        ndk {
+            abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+        }
     }
 
     buildTypes {
@@ -69,6 +73,14 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
     implementation (libs.androidx.room.runtime) // Aktuelle stabile Version
+    // SQLCipher für Android
+    implementation(libs.sqlcipher)
+
+    // AndroidX SQLite
+    implementation(libs.androidx.sqlite)
+
+    // Security Crypto für EncryptedSharedPreferences
+    implementation(libs.security.crypto)
     ksp(libs.androidx.room.compiler)
     implementation (libs.androidx.room.ktx)
     testImplementation(libs.junit)
