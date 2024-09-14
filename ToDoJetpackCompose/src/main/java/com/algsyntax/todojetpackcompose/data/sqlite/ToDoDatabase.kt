@@ -29,7 +29,7 @@ abstract class ToDoDatabase : RoomDatabase() {
          */
         fun getDatabase(context: Context): ToDoDatabase {
             return INSTANCE ?: synchronized(this) {
-                // Generieren oder Abrufen des sicheren Passworts
+                //Generate or retrieve the secure password
                 val passphrase: ByteArray = getPassphrase(context)
                 val factory = SupportFactory(passphrase)
 
@@ -47,16 +47,15 @@ abstract class ToDoDatabase : RoomDatabase() {
         }
 
         /**
-         * Funktion zum Abrufen des Verschlüsselungspassworts.
-         * Hier verwenden wir EncryptedSharedPreferences, um das Passwort sicher zu speichern.
+         * Encryption password retrieval function. Here we use EncryptedSharedPreferences to securely store the password.
          */
         private fun getPassphrase(context: Context): ByteArray {
-            // MasterKey für die Verschlüsselung erstellen
+            // Create MasterKey for encryption
             val masterKey = MasterKey.Builder(context)
                 .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
                 .build()
 
-            // EncryptedSharedPreferences erstellen oder öffnen
+            // Create or open EncryptedSharedPreferences
             val sharedPreferences = EncryptedSharedPreferences.create(
                 context,
                 "secret_shared_prefs",
@@ -65,17 +64,17 @@ abstract class ToDoDatabase : RoomDatabase() {
                 EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
             )
 
-            // Überprüfen, ob das Passwort bereits gespeichert ist
+            // Check whether the password is already saved
             var passphraseString = sharedPreferences.getString("db_passphrase", null)
 
             if (passphraseString == null) {
-                // Passwort generieren (z. B. zufällig)
+                // Generate a new password if not found
                 passphraseString = generateRandomPassphrase()
-                // Passwort speichern
+                // Saving password to SharedPreferences
                 sharedPreferences.edit().putString("db_passphrase", passphraseString).apply()
             }
 
-            // Konvertiert das Passwort in ByteArray
+           // Converts the password to ByteArray
             return SQLiteDatabase.getBytes(passphraseString.toCharArray())
         }
 
@@ -83,7 +82,7 @@ abstract class ToDoDatabase : RoomDatabase() {
          * Funktion zum Generieren eines sicheren, zufälligen Passworts.
          */
         private fun generateRandomPassphrase(): String {
-            // Äthiopisches Alphabet hinzufügen
+            // Add Ethiopian alphabet
             val ethiopicAlphabet = "ሀሁሂሃሄህሆሇለሉሊላሌልሎሏ" +
                     "መሙሚማሜምሞሟሠሡሢሣሤሥሦሧ" +
                     "ረሩሪራሬርሮሯሰሱሲሳሴስሶሷ" +
@@ -102,16 +101,16 @@ abstract class ToDoDatabase : RoomDatabase() {
                     "ፀፁፂፃፄፅፆፇፈፉፊፋፌፍፎፏ" +
                     "ፐፑፒፓፔፕፖፗ"
 
-            // Lateinisches Alphabet und andere Zeichen
+            // Latin alphabet and other characters
             val latinAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
             val numbers = "0123456789"
             val specialChars = "!@#\$%^&*()-_=+<>?"
 
-            // Kombinieren aller erlaubten Zeichen
+            // Combining all allowed characters
             val allowedChars = ethiopicAlphabet + latinAlphabet + numbers + specialChars
 
-            // Erhöhen der Passphrase-Länge
-            val passphraseLength = 64  // Zum Beispiel auf 64 erhöhen
+            // Increasing the passphrase length
+            val passphraseLength = 64 // For example increase to 64
 
             return (1..passphraseLength)
                 .map { allowedChars.random() }
