@@ -15,7 +15,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -85,8 +87,8 @@ fun TaskItem(task: Task, onTaskChecked: (Task) -> Unit, onDeleteTask: (Task) -> 
             .padding(8.dp)
             .size(width = cardWidth, height = cardHeight)
             .clickable { isExpanded = !isExpanded } // Toggle expanded state on click
-            .background(Color.Black) // Terminal-like black background
-            .border(1.dp, Color.Green) // Green border for terminal-like styling
+            .border(1.dp, Color.Green), // Green border for terminal-like styling
+             colors = CardDefaults.cardColors(containerColor = Color.Black) // Sets the background of the card to black
     ) {
         // Column to display task title and description (if expanded)
         Column(modifier = Modifier
@@ -100,13 +102,18 @@ fun TaskItem(task: Task, onTaskChecked: (Task) -> Unit, onDeleteTask: (Task) -> 
             ) {
                 // Checkbox that reflects the task's completion status.
                 Checkbox(
-                    checked = isChecked,
-                    onCheckedChange = { checked ->
-                        isChecked = checked
-                        // Trigger the callback with the updated task when the checkbox state changes.
+                    checked = isChecked, // Sets the current state of the checkbox (checked or unchecked)
+                    onCheckedChange = { checked->
+                        isChecked = checked // Updates the local state when the checkbox status changes
+                        // Calls the callback function to update the parent state with the new value
                         onTaskChecked(task.copy(isCompleted = checked))
                     },
-                    modifier = Modifier.background(Color.Black)
+                    // Customizes the colors of the checkbox to match the terminal-like style
+                    colors = CheckboxDefaults.colors(
+                        checkedColor = Color.Green,     // Color of the checkbox when checked (green border and background)
+                        uncheckedColor = Color.Green,   // Color of the checkbox when unchecked (green border)
+                        checkmarkColor = Color.Black    // Color of the checkmark inside the checkbox (black to stand out from the green background)
+                    )
                 )
                 // Displays the task's title next to the checkbox.
                 Text(text = task.title, modifier = Modifier.padding(start = 8.dp), style = TextStyle(color = Color.Green, fontFamily = FontFamily.Monospace))
