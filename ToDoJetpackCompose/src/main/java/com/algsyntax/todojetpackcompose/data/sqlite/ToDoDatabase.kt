@@ -79,7 +79,7 @@ abstract class ToDoDatabase : RoomDatabase() {
         }
 
         /**
-         * Funktion zum Generieren eines sicheren, zufälligen Passworts.
+         * Function to generate a secure, random password
          */
         private fun generateRandomPassphrase(): String {
             // Add Ethiopian alphabet
