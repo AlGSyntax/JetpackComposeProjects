@@ -46,43 +46,57 @@ abstract class ToDoDatabase : RoomDatabase() {
             }
         }
 
+
         /**
-         * Encryption password retrieval function. Here we use EncryptedSharedPreferences to securely store the password.
+         * Retrieves or generates the encryption passphrase for the encrypted SQLite database.
+         *
+         * This function ensures that the encryption passphrase is securely generated,
+         * stored, and retrieved using Android's security libraries. It uses `MasterKey`
+         * and `EncryptedSharedPreferences` to prevent unauthorized access to the passphrase.
+         *
+         * @param context The application context, required for accessing Android-specific features.
+         * @return The passphrase as a ByteArray, necessary for initializing the encrypted database.
          */
         private fun getPassphrase(context: Context): ByteArray {
-            // Create MasterKey for encryption
+            // Create a MasterKey for encryption using AES256_GCM specification
             val masterKey = MasterKey.Builder(context)
                 .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
                 .build()
 
-            // Create or open EncryptedSharedPreferences
+            // Create or open EncryptedSharedPreferences with the specified encryption schemes
             val sharedPreferences = EncryptedSharedPreferences.create(
                 context,
-                "secret_shared_prefs",
-                masterKey,
-                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+                "secret_shared_prefs", // Name of the SharedPreferences file
+                masterKey, // MasterKey for encrypting the data
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV, // Encryption scheme for keys
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM // Encryption scheme for values
             )
 
-            // Check whether the password is already saved
+            // Attempt to retrieve the existing passphrase from EncryptedSharedPreferences
             var passphraseString = sharedPreferences.getString("db_passphrase", null)
 
             if (passphraseString == null) {
-                // Generate a new password if not found
+                // Generate a new passphrase if one does not already exist
                 passphraseString = generateRandomPassphrase()
-                // Saving password to SharedPreferences
+                // Save the new passphrase securely in EncryptedSharedPreferences
                 sharedPreferences.edit().putString("db_passphrase", passphraseString).apply()
             }
 
-           // Converts the password to ByteArray
+            // Convert the passphrase to a ByteArray for use with SQLCipher
             return SQLiteDatabase.getBytes(passphraseString.toCharArray())
         }
 
         /**
-         * Function to generate a secure, random password
+         * Generates a secure, random passphrase for database encryption.
+         *
+         * This function creates a passphrase with high entropy by including a wide range of characters,
+         * such as the Ethiopian alphabet, Latin letters, numbers, and special symbols. The increased
+         * length and character variety enhance security against brute-force attacks.
+         *
+         * @return A randomly generated passphrase as a String.
          */
         private fun generateRandomPassphrase(): String {
-            // Add Ethiopian alphabet
+            // Ethiopian alphabet characters
             val ethiopicAlphabet = "ሀሁሂሃሄህሆሇለሉሊላሌልሎሏ" +
                     "መሙሚማሜምሞሟሠሡሢሣሤሥሦሧ" +
                     "ረሩሪራሬርሮሯሰሱሲሳሴስሶሷ" +
@@ -101,17 +115,18 @@ abstract class ToDoDatabase : RoomDatabase() {
                     "ፀፁፂፃፄፅፆፇፈፉፊፋፌፍፎፏ" +
                     "ፐፑፒፓፔፕፖፗ"
 
-            // Latin alphabet and other characters
+            // Latin alphabet characters and other symbols
             val latinAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
             val numbers = "0123456789"
             val specialChars = "!@#\$%^&*()-_=+<>?"
 
-            // Combining all allowed characters
+            // Combine all allowed characters into a single string
             val allowedChars = ethiopicAlphabet + latinAlphabet + numbers + specialChars
 
-            // Increasing the passphrase length
-            val passphraseLength = 64 // For example increase to 64
+            // Set the passphrase length to 64 characters for enhanced security
+            val passphraseLength = 64
 
+            // Generate the random passphrase using the allowed characters
             return (1..passphraseLength)
                 .map { allowedChars.random() }
                 .joinToString("")
