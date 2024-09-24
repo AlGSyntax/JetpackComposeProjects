@@ -38,7 +38,7 @@ import com.algsyntax.todojetpackcompose.viewmodel.TaskViewModel
 fun TaskListScreen(
     modifier: Modifier = Modifier,
     viewModel: TaskViewModel = viewModel(),
-    exampletasks: List<Task> = emptyList()
+    exampletasks: List<Task> = emptyList()// an empty list
 ) {
     // Collect the list of tasks from the ViewModel. If no tasks are provided, use the example list.
     val tasks = exampletasks.ifEmpty { viewModel.allTasks.collectAsState(initial = emptyList()).value }
