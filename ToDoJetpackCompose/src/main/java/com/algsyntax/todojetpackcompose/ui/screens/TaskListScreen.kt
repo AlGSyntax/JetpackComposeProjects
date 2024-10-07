@@ -36,8 +36,8 @@ import com.algsyntax.todojetpackcompose.viewmodel.TaskViewModel
  */
 @Composable
 fun TaskListScreen(
-    modifier: Modifier = Modifier,
-    viewModel: TaskViewModel = viewModel(),
+    modifier: Modifier = Modifier,// Modifier to apply layout adjustments.
+    viewModel: TaskViewModel = viewModel(),// Initialize the ViewModel
     exampletasks: List<Task> = emptyList()// an empty list
 ) {
     // Collect the list of tasks from the ViewModel. If no tasks are provided, use the example list.
