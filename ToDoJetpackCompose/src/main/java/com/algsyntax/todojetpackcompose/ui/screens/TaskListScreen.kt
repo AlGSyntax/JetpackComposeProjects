@@ -111,16 +111,16 @@ fun TaskListScreen(
                         // Box styled as a button for adding a new task.
                         Box(
                             modifier = Modifier
-                                .border(1.dp, Color.White) // White border around the box to mimic a button.
+                                .border(1.dp, Color.Green) // Green border around the box to mimic a button.
                                 .padding(8.dp) // Padding inside the box to make the text more readable.
                                 .clickable { showDialog = true } // Show the dialog when clicked.
                         ) {
-                            // Text inside the button, styled as white monospace text.
+                            // Text inside the button, styled as green monospace text.
                             BasicText(
                                 text = "Add Task",
                                 style = TextStyle(
                                 fontSize = 16.sp, // Smaller font size for the button text.
-                                color = Color.White, // White text.
+                                color = Color.Green, // Green text.
                                 fontFamily = FontFamily.Monospace, // Monospace font for consistency.
                                 textAlign = TextAlign.Center
                                 )// Text centered inside the button.
@@ -170,16 +170,16 @@ fun TaskListScreen(
                 // Box styled as a button to clear completed tasks.
                 Box(
                     modifier = Modifier
-                        .border(1.dp, Color.White) // White border around the box for the button look.
+                        .border(1.dp, Color.Green) // Green border around the box for the button look.
                         .padding(8.dp) // Padding inside the box.
                         .clickable { viewModel.clearCompletedTasks() } // Clear completed tasks when clicked.
                 ) {
-                    // Text inside the button, styled as white monospace text.
+                    // Text inside the button, styled as green monospace text.
                     BasicText(
                         text = "Clear Completed", // Button label.
                         style = TextStyle(
                         fontSize = 16.sp, // Smaller font size for the button text.
-                        color = Color.White, // White text.
+                        color = Color.Green, // Green text.
                         fontFamily = FontFamily.Monospace, // Monospace font for consistency.
                         textAlign = TextAlign.Center // Text centered inside the button.
                     )
