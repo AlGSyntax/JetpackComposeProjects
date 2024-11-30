@@ -1,30 +1,43 @@
 package com.algsyntax.todojetpackcompose.ui.components
 
 
+
+
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 /**
- * A Composable function that displays a dialog for adding a new task.
+ * Ein Composable, das einen Dialog zum Hinzufügen einer neuen Aufgabe im terminalähnlichen Stil anzeigt.
  *
- * This function shows a dialog with input fields for the task title and description,
- * along with buttons to confirm or dismiss the dialog.
- *
- * @param showDialog A boolean flag to control the visibility of the dialog.
- * @param onDismiss A callback function to be invoked when the dialog is dismissed.
- * @param onAddTask A callback function to be invoked when the task is added.
- *                  It provides the title and description of the new task.
+ * @param showDialog Ein boolescher Flag zur Steuerung der Sichtbarkeit des Dialogs.
+ * @param onDismiss Eine Callback-Funktion, die aufgerufen wird, wenn der Dialog abgelehnt wird.
+ * @param onAddTask Eine Callback-Funktion, die aufgerufen wird, wenn die Aufgabe hinzugefügt wird.
+ *                  Sie erhält den Titel und die Beschreibung der neuen Aufgabe.
  */
 @Composable
 fun AddTaskDialog(
@@ -32,80 +45,159 @@ fun AddTaskDialog(
     onDismiss: () -> Unit,
     onAddTask: (String, String) -> Unit
 ) {
-    // Check if the dialog should be displayed
     if (showDialog) {
-        // Local state variables to store the user input for the task title and description
-        var newTaskTitle by remember { mutableStateOf("") }
-        var newTaskDescription by remember { mutableStateOf("") }
+        // Lokale Zustandsvariablen zur Speicherung der Benutzereingaben
+        var newTaskTitle by remember { mutableStateOf(TextFieldValue("")) }
+        var newTaskDescription by remember { mutableStateOf(TextFieldValue("")) }
 
-        // Composable AlertDialog to display the dialog UI
+        // Angepasstes AlertDialog für den terminalähnlichen Stil
         AlertDialog(
-            onDismissRequest = onDismiss, // Triggered when the user attempts to dismiss the dialog
+            onDismissRequest = onDismiss,
+            containerColor = Color.Black, // Setzt den Hintergrund des Dialogs auf schwarz
             title = {
-                Text(
-                    text = "Add New Task",
-                    color = MaterialTheme.colorScheme.onBackground
-                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color(0xFF002200))
+                        .padding(8.dp)
+                        .border(BorderStroke(2.dp, Color(0xFF00FF00)))
+                ) {
+                    BasicText(
+                        text = "Neue Aufgabe hinzufügen",
+                        style = TextStyle(
+                            color = Color(0xFF00FF00),
+                            fontFamily = FontFamily.Monospace,
+                            fontSize = 20.sp,
+                            textAlign = TextAlign.Center
+                        ),
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
             },
             text = {
-                // Column to stack the input fields vertically
-                Column {
-                    // Input field for the task title
-                    OutlinedTextField(
-                        value = newTaskTitle,
-                        onValueChange = { newTaskTitle = it },
-                        label = { Text("Title", color = MaterialTheme.colorScheme.primary) }
-                    )
-                    // Input field for the task description
-                    OutlinedTextField(
-                        value = newTaskDescription,
-                        onValueChange = { newTaskDescription = it },
-                        label = { Text("Description", color = MaterialTheme.colorScheme.primary) }
-                    )
+                Column(
+                    modifier = Modifier
+                        .background(Color(0xFF002200))
+                        .padding(8.dp)
+                ) {
+                    // Eingabefeld für den Aufgabentitel
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .border(BorderStroke(1.dp, Color(0xFF00FF00)))
+                            .background(Color(0xFF001100))
+                            .padding(4.dp)
+                    ) {
+                        BasicTextField(
+                            value = newTaskTitle,
+                            onValueChange = { newTaskTitle = it },
+                            textStyle = TextStyle(
+                                color = Color(0xFF00FF00),
+                                fontFamily = FontFamily.Monospace,
+                                fontSize = 16.sp
+                            ),
+                            decorationBox = { innerTextField ->
+                                if (newTaskTitle.text.isEmpty()) {
+                                    BasicText(
+                                        text = "Titel",
+                                        style = TextStyle(
+                                            color = Color(0xFF00FF00).copy(alpha = 0.5f),
+                                            fontFamily = FontFamily.Monospace,
+                                            fontSize = 16.sp
+                                        )
+                                    )
+                                }
+                                innerTextField()
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Eingabefeld für die Aufgabenbeschreibung
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(100.dp)
+                            .border(BorderStroke(1.dp, Color(0xFF00FF00)))
+                            .background(Color(0xFF001100))
+                            .padding(4.dp)
+                    ) {
+                        BasicTextField(
+                            value = newTaskDescription,
+                            onValueChange = { newTaskDescription = it },
+                            textStyle = TextStyle(
+                                color = Color(0xFF00FF00),
+                                fontFamily = FontFamily.Monospace,
+                                fontSize = 16.sp
+                            ),
+                            decorationBox = { innerTextField ->
+                                if (newTaskDescription.text.isEmpty()) {
+                                    BasicText(
+                                        text = "Beschreibung",
+                                        style = TextStyle(
+                                            color = Color(0xFF00FF00).copy(alpha = 0.5f),
+                                            fontFamily = FontFamily.Monospace,
+                                            fontSize = 16.sp
+                                        )
+                                    )
+                                }
+                                innerTextField()
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                 }
             },
             confirmButton = {
-                // Button to confirm the addition of the task
-                Button(
-                    onClick = {
-                        if (newTaskTitle.isNotEmpty() && newTaskDescription.isNotEmpty()) {
-                            onAddTask(newTaskTitle, newTaskDescription) // Invoke the callback to add the task
+                Box(
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .clickable {
+                            val title = newTaskTitle.text.trim()
+                            val description = newTaskDescription.text.trim()
+                            if (title.isNotEmpty() && description.isNotEmpty()) {
+                                onAddTask(title, description)
+                            }
                         }
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
-                    )
+                        .background(Color(0xFF00FF00))
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .border(BorderStroke(1.dp, Color(0xFF00FF00)))
                 ) {
-                    Text("Add", color = MaterialTheme.colorScheme.onPrimary)
+                    BasicText(
+                        text = "Hinzufügen",
+                        style = TextStyle(
+                            color = Color(0xFF002200),
+                            fontFamily = FontFamily.Monospace,
+                            fontSize = 16.sp,
+                            textAlign = TextAlign.Center
+                        ),
+                        modifier = Modifier.align(Alignment.Center)
+                    )
                 }
             },
             dismissButton = {
-                // Button to dismiss the dialog without adding a task
-                Button(
-                    onClick = onDismiss,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.secondary
-                    )
+                Box(
+                    modifier = Modifier
+                        .padding(start = 8.dp)
+                        .clickable { onDismiss() }
+                        .background(Color(0xFF004400))
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .border(BorderStroke(1.dp, Color(0xFF00FF00)))
                 ) {
-                    Text("Cancel", color = MaterialTheme.colorScheme.onSecondary)
+                    BasicText(
+                        text = "Abbrechen",
+                        style = TextStyle(
+                            color = Color(0xFF00FF00),
+                            fontFamily = FontFamily.Monospace,
+                            fontSize = 16.sp,
+                            textAlign = TextAlign.Center
+                        ),
+                        modifier = Modifier.align(Alignment.Center)
+                    )
                 }
             }
         )
     }
-}
-
-/**
- * Preview function for the AddTaskDialog Composable.
- *
- * This function provides a preview of the AddTaskDialog Composable
- * with a sample task and shows how the dialog would look in the UI.
- */
-@Preview(showBackground = true)
-@Composable
-fun AddTaskDialogPreview() {
-    AddTaskDialog(
-        showDialog = true,
-        onDismiss = {},
-        onAddTask = { _, _ -> /* Preview callback */ }
-    )
 }
