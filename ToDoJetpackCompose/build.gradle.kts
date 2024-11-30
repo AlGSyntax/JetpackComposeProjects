@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "com.algsyntax.todojetpackcompose"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.algsyntax.todojetpackcompose"
         minSdk = 34
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
