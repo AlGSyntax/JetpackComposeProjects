@@ -1,40 +1,71 @@
-# Mono-Repo for To-Do App, Weather App, and Daily News App
+# JetpackComposeProjects
 
-## 🚧 Work in Progress 🚧
-
-Welcome to the **Mono-Repo** for my three ongoing projects:
-- **To-Do App**: A simple task management app built using Kotlin and Jetpack Compose.
-- **Weather App**: A basic structure for a weather forecasting app.
-- **Daily News App**: A skeleton for a news aggregation app.
-
-### ❗️ Disclaimer: Primordial README
-
-This README is still in its **primitive** form and serves as a **basic placeholder** for now. I plan to expand and improve it as the projects evolve. For now, it will briefly describe the three ongoing apps and the repo structure. **Think of this as a work-in-progress guide** – more detailed documentation will be added soon.
-
-### To-Do App (WIP)
-The To-Do app is built using **Kotlin** and **Jetpack Compose**. It allows users to manage tasks with basic CRUD functionality.
-
-### Weather App (WIP)
-The Weather App currently contains the basic project structure for integrating weather APIs and UI components for displaying weather data.
-
-### Daily News App (WIP)
-The Daily News App is a skeleton project for aggregating and displaying daily news articles.
-
-## Future Enhancements
-- **Detailed Documentation**: Each project will have its own dedicated section with instructions for setup, usage, and contributing.
-- **Feature List**: A more detailed breakdown of each app's functionality will be added.
-- **API Integration**: Information on APIs used in the Weather and Daily News apps will be documented.
-- **Screenshots and Diagrams**: To provide better visualization of the app structures.
-
-Stay tuned as I continue to update this repository with more information and features. Thanks for your patience!
-
-## Contributing
-
-Contributions are welcome once the primary structure is complete. For now, the code is in its early stages, so feel free to explore, but please be aware that the project is under heavy development.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## 🔧 Project Overview
+This MonoRepo contains various Android projects developed with Jetpack Compose. Currently, it includes the **ToDo Jetpack Compose** project, with planned extensions for **NewsReader Jetpack Compose** and **Weather Jetpack Compose**.
 
 ---
-⚙️ **Note**: This is a **"construction site"** README. It will be expanded as the projects progress and the code matures.
+## 📚 Included Projects
+### 1. ToDo Jetpack Compose 📅
+A minimalist to-do list management tool with a terminal-like user interface.
+#### **Main Features:**
+- ✅ Create, edit, delete tasks
+- ✔️ Mark tasks as completed
+- 🔒 Persistent storage with **Room Database** (SQLCipher encrypted)
+- 🔑 Secure access using **EncryptedSharedPreferences**
+- ⚙️ Modular repository approach
+- 🛠️ Extendable algorithm for database completion
+- 📴 **Fully offline, no internet dependencies**
+
+### 2. NewsReader Jetpack Compose 📰 *(not started yet)*
+A local news reader that will provide stored news articles without requiring an internet connection.
+
+### 3. Weather Jetpack Compose ☁️ *(not started yet)*
+A weather app that will use locally stored data for forecasts without relying on external APIs.
+
+
+
+---
+## ⚙️ Setup & Installation
+### **1. Requirements**
+- Android Studio **Giraffe or later**
+- Java **17 or later**
+- Kotlin **1.8 or later**
+- Gradle **8.0 or later**
+
+### **2. Clone and Run the Project**
+```bash
+# Clone the repository
+git clone https://github.com/AlGSyntax/JetpackComposeProjects.git
+cd jetpackcomposeprojects
+
+# Open in Android Studio
+```
+### **3. Build & Run**
+1. **In Android Studio**: Select a connected device or emulator.
+2. **Build the project:** Click *Run* (▶).
+3. **Test and use the app!** 
+
+---
+## 📊 Technology Stack
+- **UI:** Jetpack Compose, Material3
+- **Database:** Room (SQLCipher encryption)
+- **State Management:** ViewModel, Flow
+- **Storage:** EncryptedSharedPreferences
+- **Dependency Injection:** Hilt (planned)
+- **No networking or cloud dependencies** 🚫🌐
+
+---
+## 🏆 Future Enhancements
+- **NewsReader Jetpack Compose** with **local news storage**
+- **Weather Jetpack Compose** with **local weather data**
+- **Extendable algorithm for database completion**
+
+---
+## 👨‍💻 Contributors
+
+If you want to contribute, feel free to create an issue or pull request! 🚀
+
+---
+## 📜 License
+This project is licensed under the **MIT License**. See [LICENSE](LICENSE) for details.
+
